@@ -4,6 +4,7 @@ IP_START=10
 
 Vagrant.configure("2") do |config|
   config.vm.provision "shell", env: {"IP_NW" => IP_NW, "IP_START" => IP_START}, inline: <<-SHELL
+      sed -i 's#in.archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list
       apt-get update -y
       echo "$IP_NW$((IP_START)) master-node" >> /etc/hosts
       echo "$IP_NW$((IP_START+1)) worker-node01" >> /etc/hosts
