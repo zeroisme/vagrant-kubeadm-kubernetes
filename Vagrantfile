@@ -4,14 +4,14 @@ IP_START=10
 
 Vagrant.configure("2") do |config|
   config.vm.provision "shell", env: {"IP_NW" => IP_NW, "IP_START" => IP_START}, inline: <<-SHELL
-      sed -i 's#in.archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list
+      sed -i 's#us.archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list
       apt-get update -y
       echo "$IP_NW$((IP_START)) master-node" >> /etc/hosts
       echo "$IP_NW$((IP_START+1)) worker-node01" >> /etc/hosts
       echo "$IP_NW$((IP_START+2)) worker-node02" >> /etc/hosts
   SHELL
 
-  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.box = "bento/ubuntu-20.04"
   config.vm.box_check_update = true
 
   config.vm.define "master" do |master|
@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
     master.vm.hostname = "master-node"
     master.vm.network "private_network", ip: IP_NW + "#{IP_START}"
     master.vm.provider "virtualbox" do |vb|
-        vb.memory = 4048
+        vb.memory = 4096
         vb.cpus = 2
     end
     master.vm.provision "shell", path: "scripts/common.sh"

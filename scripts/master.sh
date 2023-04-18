@@ -44,17 +44,20 @@ kubeadm token create --print-join-command > /vagrant/configs/join.sh
 
 # Install Calico Network Plugin
 
-curl https://docs.projectcalico.org/manifests/calico.yaml -O
-
-kubectl apply -f calico.yaml
+# curl https://docs.projectcalico.org/manifests/calico.yaml -O
+kubectl create -f /vagrant/manifests/tigera-operator.yaml
+sleep 3
+kubectl create -f /vagrant/manifests/custom-resources.yaml
 
 # Install Metrics Server
 
-kubectl apply -f https://raw.githubusercontent.com/scriptcamp/kubeadm-scripts/main/manifests/metrics-server.yaml
+# kubectl apply -f https://raw.githubusercontent.com/scriptcamp/kubeadm-scripts/main/manifests/metrics-server.yaml
+kubectl create -f /vagrant/manifests/metrics-server.yaml
 
 # Install Kubernetes Dashboard
 
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+# kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+kubectl create -f /vagrant/manifests/kubernetes-dashboard.yaml
 
 # Create Dashboard User
 

@@ -18,7 +18,6 @@ sudo swapoff -a
 OS="xUbuntu_20.04"
 
 VERSION="1.23"
-
 # Create the .conf file to load the modules at bootup
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
@@ -50,7 +49,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable containerd --now
 
 # enable containerd cri
-sudo sed -i 's@\(disabled_plugins.*\)@#\1@g' /etc/containerd/config.toml
+sudo mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml
+sudo sed -i '/\[plugins."io.containerd.grpc.v1.cri".registry.mirrors\]/a\        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]\n          endpoint = ["https://ot2k4d59.mirror.aliyuncs.com"]' /etc/containerd/config.toml
+sudo sed -i 's#registry.k8s.io/pause:3.6#registry.aliyuncs.com/google_containers/pause:3.6#g' /etc/containerd/config.toml
 echo "containerd runtime installed susccessfully"
 
 sudo systemctl restart containerd
